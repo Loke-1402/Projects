@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Code Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom, #4783c0, #0081f2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      color: #ffffff;
+      user-select: none;
+    }
+
+    .container {
+      background: #2a2a2a;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    input[type="text"] {
+      width: 80%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #3a3a3a;
+      color: #ffffff;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #qr-code {
+      margin-top: 20px;
+    }
+
+    #toggle-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #555;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>QR Code Generator</h1>
+    <input type="text" id="qr-input" placeholder="Enter text or URL">
+    <button id="generate-btn">Generate QR Code</button>
+    <div id="qr-code"></div>
+    <button id="toggle-btn">Switch to Light Mode</button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+  <script>
+    const toggleBtn = document.getElementById('toggle-btn');
+    const body = document.body;
+    const container = document.querySelector('.container');
+
+    // Check for saved user preference in local storage
+    if (localStorage.getItem('theme') === 'light') {
+      body.style.background = 'linear-gradient(to bottom, #ecf0f1, #bdc3c7)';
+      container.style.background = '#ffffff';
+      toggleBtn.textContent = 'Switch to Dark Mode';
+      document.querySelector('h1').style.color = '#000';
+      document.querySelector('input[type="text"]').style.backgroundColor = '#fff';
+      document.querySelector('input[type="text"]').style.color = '#000';
+    }
+
+    toggleBtn.addEventListener('click', function () {
+      if (localStorage.getItem('theme') === 'dark') {
+        // Switch to light mode
+        body.style.background = 'linear-gradient(to bottom, #ecf0f1, #bdc3c7)';
+        container.style.background = '#ffffff';
+        toggleBtn.textContent = 'Switch to Dark Mode';
+        document.querySelector('h1').style.color = '#000';
+        document.querySelector('input[type="text"]').style.backgroundColor = '#fff';
+        document.querySelector('input[type="text"]').style.color = '#000';
+        localStorage.setItem('theme', 'light');
+      } else {
+        // Switch to dark mode
+        body.style.background = 'linear-gradient(to bottom, #2c3e50, #34495e)';
+        container.style.background = '#2a2a2a';
+        toggleBtn.textContent = 'Switch to Light Mode';
+        document.querySelector('h1').style.color = '#ffffff';
+        document.querySelector('input[type="text"]').style.backgroundColor = '#3a3a3a';
+        document.querySelector('input[type="text"]').style.color = '#ffffff';
+        localStorage.setItem('theme', 'dark');
+      }
+    });
+
+    document.getElementById('generate-btn').addEventListener('click', function () {
+      const input = document.getElementById('qr-input').value;
+      const qrCodeContainer = document.getElementById('qr-code');
+
+      // Clear previous QR code
+      qrCodeContainer.innerHTML = '';
+
+      if (input) {
+        // Generate new QR code
+        new QRCode(qrCodeContainer, {
+          text: input,
+          width: 200,
+          height: 200,
+        });
+      } else {
+        alert('Please enter a text or URL to generate a QR code.');
+      }
+    });
+  </script>
+</body>
+</html>
